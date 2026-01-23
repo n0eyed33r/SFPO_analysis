@@ -5,7 +5,7 @@ import glob
 import os
 
 
-class file_loader:
+class FileLoader:
     """
     shows a window for file and folder picking - searching for *.txt files (measurements)
     """
@@ -16,6 +16,7 @@ class file_loader:
                 ("All files", "*.")
             )
         self.title = "SFPO analyzer"
+        self._selected_mode = None
 
     def run(self):
         """
@@ -38,8 +39,6 @@ class file_loader:
         return None
 
     def _show_selection_gui(self):
-        result = []  # list of choosen results
-
         # create window
         root = tk.Tk()  
         root.title("SFPO analyzer")
@@ -51,9 +50,10 @@ class file_loader:
         tk.Radiobutton(root, text="Single measurement", variable=choice, value="1").pack()
         tk.Radiobutton(root, text="One measurement series", variable=choice, value="2").pack()
         tk.Radiobutton(root, text="All measurement series at once", variable=choice, value="3",padx=50).pack()
-
+        
         def on_button_click():
-            result.append(choice.get())  # collect the choice
+            value = choice.get()
+            self._selected_mode = value  # collect the choice
             root.destroy()    
         tk.Button(root, text="Select", command=on_button_click).pack(pady=25)
 
@@ -68,7 +68,7 @@ class file_loader:
         root.geometry(f'{window_width}x{window_height}+{int(x)}+{int(y)}')
 
         root.mainloop()
-        return 
+        return self._selected_mode
     
     def _center_window(self, window):
         """Hilfsmethode zum Zentrieren des Fensters"""
